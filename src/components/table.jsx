@@ -6,7 +6,7 @@ import TableBody from "./common/tableBody";
 const Table = ({ movies, movieLength, onLiked, onDelete, onSort }) => {
   return (
     <React.Fragment>
-      <p className="mt-4 mb-4">Showing {movieLength} movies in the database</p>
+      <p className="mt-4 mb-3">Showing {movieLength} movies in the database</p>
       <table className="table">
         <TableHead onSort={onSort} />
         <TableBody movies={movies} onLiked={onLiked} onDelete={onDelete} />
