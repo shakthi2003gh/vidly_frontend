@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { getMovies } from "../StarterCode/services/fakeMovieService";
-import { getGenres } from "../StarterCode/services/fakeGenreService";
+import { getMovies, deleteMovie } from "../StarterCode/services/movieServices";
+import { getGenres } from "../StarterCode/services/genreServices";
 import ListGroup from "./common/listGroup";
 import Table from "./table";
 import Pagination from "./common/pagination";
@@ -8,6 +8,7 @@ import SearchBox from "./common/searchBox";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 class MoviesSection extends Component {
   state = {
@@ -29,10 +30,20 @@ class MoviesSection extends Component {
     this.setState({ movies });
   };
 
-  handleDelete = (id) => {
-    const movies = this.state.movies.filter((m) => m._id !== id);
+  handleDelete = async (id) => {
+    const originalMovies = this.state.movies;
 
+    const movies = originalMovies.filter((m) => m._id !== id);
     this.setState({ movies });
+
+    try {
+      await deleteMovie(id);
+    } catch (e) {
+      if (e.response && e.response.status === 404)
+        toast.error("this movie already been deleted.");
+
+      this.setState({ movies: originalMovies });
+    }
   };
 
   handlePageChange = (page) => this.setState({ currentPage: page });
@@ -50,8 +61,11 @@ class MoviesSection extends Component {
 
   handleSort = (column) => this.setState({ sortColumn: column });
 
-  componentDidMount() {
-    this.setState({ movies: getMovies(), genres: getGenres() });
+  async componentDidMount() {
+    const { data } = await getGenres();
+
+    const { data: movies } = await getMovies();
+    this.setState({ movies, genres: [...data] });
   }
 
   render() {
