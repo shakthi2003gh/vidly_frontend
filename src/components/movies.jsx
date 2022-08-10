@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { getMovies, deleteMovie } from "../StarterCode/services/movieServices";
-import { getGenres } from "../StarterCode/services/genreServices";
+import { getMovies, deleteMovie } from "../services/movieServices";
+import { getGenres } from "../services/genreServices";
 import ListGroup from "./common/listGroup";
 import Table from "./table";
 import Pagination from "./common/pagination";
@@ -79,6 +79,8 @@ class MoviesSection extends Component {
       searchQuery,
     } = this.state;
 
+    const { user } = this.props;
+
     // >>
     let filteredMovies = allMovies.filter(
       (movie) => movie.genre.name === showGenre || showGenre === "All Genres"
@@ -108,9 +110,15 @@ class MoviesSection extends Component {
           />
         </div>
         <div className="col">
-          <Link className="btn btn-primary mt-4" to="/movies/new" role="button">
-            New movie
-          </Link>
+          {user && (
+            <Link
+              className="btn btn-primary mt-4"
+              to="/movies/new"
+              role="button"
+            >
+              New movie
+            </Link>
+          )}
           <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <Table
             movies={movies}

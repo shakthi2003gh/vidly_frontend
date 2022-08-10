@@ -1,7 +1,10 @@
 import Likes from "./likes";
 import { Link } from "react-router-dom";
+import auth from "../../services/authServices";
 
 const TableBody = ({ movies, onLiked, onDelete }) => {
+  const user = auth.getCurrentUser();
+
   return (
     <tbody>
       {movies.map((movie) => {
@@ -16,14 +19,16 @@ const TableBody = ({ movies, onLiked, onDelete }) => {
             <td>
               <Likes liked={movie.liked} onClick={() => onLiked(movie)} />
             </td>
-            <td>
-              <button
-                onClick={() => onDelete(movie._id)}
-                className="btn btn-danger btn-sm"
-              >
-                Delete
-              </button>
-            </td>
+            {user && user.isAdmin && (
+              <td>
+                <button
+                  onClick={() => onDelete(movie._id)}
+                  className="btn btn-danger btn-sm"
+                >
+                  Delete
+                </button>
+              </td>
+            )}
           </tr>
         );
       })}

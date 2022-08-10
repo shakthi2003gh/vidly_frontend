@@ -1,5 +1,7 @@
 import React from "react";
 import form from "./common/form";
+import auth from "../services/authServices";
+import { register } from "./../services/userServices";
 const Joi = require("joi");
 
 class RegisterForm extends form {
@@ -14,7 +16,19 @@ class RegisterForm extends form {
     name: Joi.string().required().label("Name"),
   };
 
-  doSubmit = () => this.props.history.replace("/movies");
+  doSubmit = async () => {
+    try {
+      const response = await register(this.state.data);
+      auth.loginWithJwt(response.headers["x-auth-token"]);
+      window.location = "/";
+    } catch (e) {
+      if (e.response && e.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.username = e.response.data;
+        this.setState({ errors });
+      }
+    }
+  };
 
   render() {
     return (

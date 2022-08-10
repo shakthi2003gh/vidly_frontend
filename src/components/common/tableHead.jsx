@@ -1,4 +1,8 @@
+import auth from "../../services/authServices";
+
 const TableHead = ({ onSort }) => {
+  const user = auth.getCurrentUser();
+
   return (
     <thead>
       <tr>
@@ -21,7 +25,7 @@ const TableHead = ({ onSort }) => {
           Rate
         </th>
         <th></th>
-        <th></th>
+        {user && user.isAdmin && <th></th>}
       </tr>
     </thead>
   );

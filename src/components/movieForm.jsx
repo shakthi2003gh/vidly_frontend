@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "./common/form";
-import { getGenres } from "./../StarterCode/services/genreServices";
-import { getMovie, saveMovie } from "./../StarterCode/services/movieServices";
+import { getGenres } from "./../services/genreServices";
+import { getMovie, saveMovie } from "./../services/movieServices";
 const Joi = require("joi");
 
 class MovieForm extends Form {
